@@ -2,6 +2,7 @@ package main
 
 import (
     "database/sql"
+    "encoding/json"
     "fmt"
     "github.com/deckarep/golang-set"
     "github.com/jmcvetta/randutil"
@@ -85,8 +86,8 @@ func channels() []randutil.Choice {
     return serials
 }
 
-func choose(chs []randutil.Choice) randutil.Choice {
-    ch, err := randutil.WeightedChoice(chs)
+func choose() randutil.Choice {
+    ch, err := randutil.WeightedChoice(choices)
     if err != nil {
         panic(err)
     }
@@ -94,11 +95,11 @@ func choose(chs []randutil.Choice) randutil.Choice {
     return ch
 }
 
-func chooseN(chs []randutil.Choice, n int) []string {
+func chooseN(n int) []string {
     set := mapset.NewSet()
 
     for set.Cardinality() < n {
-        set.Add(choose(chs).Item.(string))
+        set.Add(choose().Item.(string))
     }
 
     array := make([]string, n)
@@ -111,7 +112,7 @@ func chooseN(chs []randutil.Choice, n int) []string {
 }
 
 type Json struct {
-    msg []string
+    Serials []string `json:"serials"`
 }
 
 func main() {
@@ -135,5 +136,17 @@ func main() {
         time.Sleep(1 * time.Second)
     }
 
-    fmt.Println("done")
+    for {
+        chans := chooseN(50)
+        jsonStruct := Json{
+            Serials: chans,
+        }
+        jsonObj, err := json.Marshal(jsonStruct)
+        if err != nil {
+            panic(err)
+        }
+
+        fmt.Println(string(jsonObj))
+        time.Sleep(1 * time.Second)
+    }
 }
