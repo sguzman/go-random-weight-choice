@@ -155,7 +155,7 @@ func main() {
 
     for len(choices) == 0 {
         fmt.Println("Waiting for init")
-        time.Sleep(1 * time.Second)
+        time.Sleep(100 * time.Second)
     }
 
     http.HandleFunc("/", handler)
