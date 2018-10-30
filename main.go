@@ -134,6 +134,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         panic(err)
     }
+
+    if count != 1363 {
+        panic("Bad byte count")
+    }
+
     fmt.Println("Wrote", count, "bytes")
 }
 
