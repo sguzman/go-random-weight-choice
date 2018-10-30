@@ -73,8 +73,6 @@ func channels() []randutil.Choice {
             Weight: subs,
             Item:   serial,
         }
-        fmt.Println(choice)
-
         serials = append(serials, choice)
     }
 
