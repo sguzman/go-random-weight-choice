@@ -110,17 +110,30 @@ func chooseN(chs []randutil.Choice, n int) []string {
     return array
 }
 
+type Json struct {
+    msg []string
+}
+
 func main() {
     go func() {
         for {
             choices = channels()
+            fmt.Println("Renewed channel list:", len(choices))
         }
     }()
 
     go func() {
         for {
             time.Sleep(100 * time.Second)
+            fmt.Println("Garbage collection")
             runtime.GC()
         }
     }()
+
+    for len(choices) == 0 {
+        fmt.Println("Waiting for init")
+        time.Sleep(1 * time.Second)
+    }
+
+    fmt.Println("done")
 }
