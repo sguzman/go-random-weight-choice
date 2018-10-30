@@ -8,6 +8,7 @@ import (
     _ "github.com/lib/pq"
     "os"
     "runtime"
+    "time"
 )
 
 type Data struct {
@@ -109,17 +110,17 @@ func chooseN(chs []randutil.Choice, n int) []string {
     return array
 }
 
-func stuff() {
-    fmt.Println(ch)
-}
-
 func main() {
     go func() {
-        choices = channels()
+        for {
+            choices = channels()
+        }
     }()
 
-    for {
-        stuff()
-        runtime.GC()
-    }
+    go func() {
+        for {
+            time.Sleep(100 * time.Second)
+            runtime.GC()
+        }
+    }()
 }
