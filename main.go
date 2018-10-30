@@ -3,6 +3,7 @@ package main
 import (
     "database/sql"
     "fmt"
+    "github.com/deckarep/golang-set"
     "github.com/jmcvetta/randutil"
     _ "github.com/lib/pq"
     "os"
@@ -17,6 +18,10 @@ type Data struct {
 const (
     defaultHost = "192.168.1.63"
     defaultPort = "30000"
+)
+
+var (
+    choices []randutil.Choice
 )
 
 func (that Data) String() string {
@@ -88,24 +93,31 @@ func choose(chs []randutil.Choice) randutil.Choice {
     return ch
 }
 
-func chooseN(chs []randutil.Choice, n uint8) []string {
+func chooseN(chs []randutil.Choice, n int) []string {
+    set := mapset.NewSet()
+
+    for set.Cardinality() < n {
+        set.Add(choose(chs).Item.(string))
+    }
+
     array := make([]string, n)
+    arraySet := set.ToSlice()
     for i := range array {
-        array[i] = choose(chs).Item.(string)
+        array[i] = arraySet[i].(string)
     }
 
     return array
 }
 
 func stuff() {
-    chans := channels()
-    fmt.Println(len(chans))
-
-    ch := choose(chans)
     fmt.Println(ch)
 }
 
 func main() {
+    go func() {
+        choices = channels()
+    }()
+
     for {
         stuff()
         runtime.GC()
