@@ -7,6 +7,7 @@ import (
     "github.com/deckarep/golang-set"
     "github.com/jmcvetta/randutil"
     _ "github.com/lib/pq"
+    "net/http"
     "os"
     "runtime"
     "time"
@@ -115,7 +116,7 @@ type Json struct {
     Serials []string `json:"serials"`
 }
 
-func getJsonSerials() string {
+func getJsonSerials() []byte {
     chans := chooseN(50)
     jsonStruct := Json{
         Serials: chans,
@@ -125,7 +126,15 @@ func getJsonSerials() string {
         panic(err)
     }
 
-    return string(jsonObj)
+    return jsonObj
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+    count, err := w.Write(getJsonSerials())
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println("Wrote", count, "bytes")
 }
 
 func main() {
@@ -148,4 +157,7 @@ func main() {
         fmt.Println("Waiting for init")
         time.Sleep(1 * time.Second)
     }
+
+    http.HandleFunc("/", handler)
+    panic(http.ListenAndServe("0.0.0.0:8080", nil))
 }
