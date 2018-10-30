@@ -142,6 +142,7 @@ func main() {
         for {
             choices = channels()
             fmt.Println("Renewed channel list:", len(choices))
+            time.Sleep(100 * time.Second)
         }
     }()
 
@@ -155,7 +156,7 @@ func main() {
 
     for len(choices) == 0 {
         fmt.Println("Waiting for init")
-        time.Sleep(100 * time.Second)
+        time.Sleep(1 * time.Second)
     }
 
     http.HandleFunc("/", handler)
