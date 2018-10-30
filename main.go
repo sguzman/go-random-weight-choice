@@ -88,14 +88,26 @@ func choose(chs []randutil.Choice) randutil.Choice {
     return ch
 }
 
+func chooseN(chs []randutil.Choice, n uint8) []string {
+    array := make([]string, n)
+    for i := range array {
+        array[i] = choose(chs).Item.(string)
+    }
+
+    return array
+}
+
+func stuff() {
+    chans := channels()
+    fmt.Println(len(chans))
+
+    ch := choose(chans)
+    fmt.Println(ch)
+}
+
 func main() {
     for {
-        chans := channels()
-        fmt.Println(len(chans))
-
-        ch := choose(chans)
-        fmt.Println(ch)
-
+        stuff()
         runtime.GC()
     }
 }
