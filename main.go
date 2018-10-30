@@ -130,16 +130,23 @@ func getJsonSerials() []byte {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-    count, err := w.Write(getJsonSerials())
-    if err != nil {
-        panic(err)
-    }
+    if len(choices) == 0 {
+        _, err := w.Write([]byte(`{"serials": []`))
+        if err != nil {
+            panic(err)
+        }
+    } else {
+        count, err := w.Write(getJsonSerials())
+        if err != nil {
+            panic(err)
+        }
 
-    if count != 1363 {
-        panic("Bad byte count")
-    }
+        if count != 1363 {
+            panic("Bad byte count")
+        }
 
-    fmt.Println("Wrote", count, "bytes")
+        fmt.Println("Wrote", count, "bytes")
+    }
 }
 
 func main() {
@@ -159,10 +166,13 @@ func main() {
         }
     }()
 
-    for len(choices) == 0 {
-        fmt.Println("Waiting for init")
-        time.Sleep(1 * time.Second)
-    }
+    go func() {
+        for len(choices) == 0 {
+            time.Sleep(1 * time.Second)
+        }
+
+        fmt.Println("Ready")
+    }()
 
     http.HandleFunc("/", handler)
     panic(http.ListenAndServe("0.0.0.0:8080", nil))
