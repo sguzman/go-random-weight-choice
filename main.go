@@ -130,7 +130,7 @@ func getJsonSerials() []byte {
 
 func handler(w http.ResponseWriter, r *http.Request) {
     if len(choices) == 0 {
-        _, err := w.Write([]byte(`{"serials": []`))
+        _, err := w.Write([]byte(`{"serials": []}`))
         if err != nil {
             panic(err)
         }
