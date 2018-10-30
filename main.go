@@ -45,7 +45,7 @@ func connection() *sql.DB {
 }
 
 func channels() []randutil.Choice {
-    sqlStr := "select serial, subs from youtube.entities.chan_stats where (serial, time) in (select serial, max(time) from youtube.entities.chan_stats group by serial) ORDER BY subs desc"
+    sqlStr := "select serial, subs from youtube.entities.chan_stats where (serial, time) in (select serial, max(time) from youtube.entities.chan_stats group by serial)"
     db := connection()
     defer func() {
         err := db.Close()
