@@ -79,10 +79,22 @@ func channels() []randutil.Choice {
     return serials
 }
 
+func choose(chs []randutil.Choice) randutil.Choice {
+    ch, err := randutil.WeightedChoice(chs)
+    if err != nil {
+        panic(err)
+    }
+
+    return ch
+}
+
 func main() {
     for {
         chans := channels()
         fmt.Println(len(chans))
+
+        ch := choose(chans)
+        fmt.Println(ch)
 
         runtime.GC()
     }
