@@ -115,6 +115,19 @@ type Json struct {
     Serials []string `json:"serials"`
 }
 
+func getJsonSerials() string {
+    chans := chooseN(50)
+    jsonStruct := Json{
+        Serials: chans,
+    }
+    jsonObj, err := json.Marshal(jsonStruct)
+    if err != nil {
+        panic(err)
+    }
+
+    return string(jsonObj)
+}
+
 func main() {
     go func() {
         for {
@@ -133,20 +146,6 @@ func main() {
 
     for len(choices) == 0 {
         fmt.Println("Waiting for init")
-        time.Sleep(1 * time.Second)
-    }
-
-    for {
-        chans := chooseN(50)
-        jsonStruct := Json{
-            Serials: chans,
-        }
-        jsonObj, err := json.Marshal(jsonStruct)
-        if err != nil {
-            panic(err)
-        }
-
-        fmt.Println(string(jsonObj))
         time.Sleep(1 * time.Second)
     }
 }
