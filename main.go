@@ -9,6 +9,7 @@ import (
     _ "github.com/lib/pq"
     "net/http"
     "os"
+    "runtime"
     "time"
 )
 
@@ -20,6 +21,7 @@ type Data struct {
 const (
     defaultHost = "192.168.1.63"
     defaultPort = "30000"
+    defaultPPort = "8080"
 )
 
 var (
@@ -166,5 +168,10 @@ func main() {
     }()
 
     http.HandleFunc("/", handler)
-    panic(http.ListenAndServe("0.0.0.0:8080", nil))
+    port := os.Getenv("PORT")
+    if len(port) == 0 {
+        port = "8080"
+    }
+
+    panic(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), nil))
 }
