@@ -156,6 +156,7 @@ func main() {
             choices = channels()
             fmt.Println("Renewed channel list:", len(choices))
             time.Sleep(100 * time.Second)
+            runtime.GC()
         }
     }()
 
