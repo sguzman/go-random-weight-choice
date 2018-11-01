@@ -1,3 +1,4 @@
+# docker.io/guzmansalv/youtube_weighted_service
 FROM golang as base
 
 RUN mkdir /app
